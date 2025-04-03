@@ -28,8 +28,8 @@ export class Check {
 
   @Prop({
     required: true,
-    enum: ['pending', 'deposited', 'cashed', 'rejected'],
-    default: 'pending',
+    enum: ['validé', 'rejeté'],
+    default: 'init',
   })
   status: string;
 }
