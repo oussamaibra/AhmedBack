@@ -18,6 +18,9 @@ import { SocketModule } from './socketIO/socket.module';
 import { StockModule } from './stock/stock.module';
 import { EtablissementModule } from './etablissements/etablissement.module';
 import { ScraperModule } from './scraper/scraper.module';
+import { Magasin } from './magasin/magasin.schema';
+import { MagasinModule } from './magasin/magasin.module';
+import { CheckModule } from './check/check.module';
 
 @Module({
   imports: [
@@ -28,6 +31,8 @@ import { ScraperModule } from './scraper/scraper.module';
     AuthModule,
     ScraperModule,
     StockModule,
+    CheckModule,
+    MagasinModule,
     EtablissementModule,
     IpInfoDataModule,
     // ServeStaticModule.forRoot({
