@@ -15,7 +15,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { LoggingInterceptor } from './logging.interceptor';
 // import { CacheModule } from '@nestjs/cache-manager';
 import { SocketModule } from './socketIO/socket.module';
-import { PostModule } from './posts/post.module';
+import { StockModule } from './stock/stock.module';
 import { EtablissementModule } from './etablissements/etablissement.module';
 import { ScraperModule } from './scraper/scraper.module';
 
@@ -27,7 +27,7 @@ import { ScraperModule } from './scraper/scraper.module';
     UserModule,
     AuthModule,
     ScraperModule,
-    PostModule,
+    StockModule,
     EtablissementModule,
     IpInfoDataModule,
     // ServeStaticModule.forRoot({
