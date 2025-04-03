@@ -14,7 +14,10 @@ export class StockService {
   }
 
   async findAll(): Promise<Stock[]> {
-    return this.stockModel.find().exec();
+    return this.stockModel
+      .find()
+
+      .exec();
   }
 
   async findOne(id: string): Promise<Stock> {
