@@ -99,23 +99,23 @@ export class UserService {
     }
   }
 
-  async updateUser(
-    createUserDTO: CreateUserDTO,
-    id: string,
-  ): Promise<any | undefined> {
-    const user = await this.userModel.findOneAndUpdate(
-      {
-        _id: id,
-      },
-      {
+  async updateUser(createUserDTO: CreateUserDTO, id: string): Promise<any> {
+    try {
+      const updatedRecompense = await this.userModel.findByIdAndUpdate(
+        id,
         createUserDTO,
-      },
-    );
+        {
+          new: true,
+        },
+      );
 
-    if (!user) {
-      throw new HttpException('Email Not Found ', HttpStatus.NOT_FOUND);
-    } else {
-      return user;
+      if (!updatedRecompense) {
+        throw new HttpException('userModel not found ', HttpStatus.NOT_FOUND);
+      }
+
+      return updatedRecompense;
+    } catch (error) {
+      throw new Error(`Failed to update userModel: ${error.message}`);
     }
   }
 

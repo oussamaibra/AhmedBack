@@ -31,6 +31,12 @@ export class AuthController {
     const user = await this.userService.addUser(createUserDTO);
     return user;
   }
+  @Post('/add')
+  async add(@Body() createUserDTO: CreateUserDTO) {
+    const user = await this.userService.addUser(createUserDTO);
+    return user;
+  }
+
   @Post('/genToken')
   async genToken() {
     const token = await this.authService.genToken();

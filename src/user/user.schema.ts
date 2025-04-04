@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
-import { link } from './dtos/create-user-dto';
 
 export type UserDocument = User & Document;
 
