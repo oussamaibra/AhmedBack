@@ -13,7 +13,7 @@ export class InvoiceService {
     @InjectModel(Stock.name) private stockModel: Model<StockDocument>,
   ) {}
 
-  async create(createInvoiceDto: CreateInvoiceDto): Promise<Invoice> {
+  async create(createInvoiceDto: CreateInvoiceDto): Promise<any> {
     // Generate invoice number if not provided
     if (!createInvoiceDto.invoiceNumber) {
       const lastInvoice = await this.invoiceModel
@@ -30,29 +30,37 @@ export class InvoiceService {
 
     console.log('ttttttttttttttt', createInvoiceDto);
 
-    const stockUpdatePromises = createInvoiceDto.items.map(
-      (item) =>
-        this.stockModel
-          .findByIdAndUpdate(
-            item.stockId,
-            {
-              $inc: {
-                'quantite.$[elem].quantiteVendue': +item.quantity,
-                // 'quantite.$[elem].quantiteInitiale': -item.quantity,
-              },
-            },
-            {
-              arrayFilters: [{ 'elem.magasinId': item.magasinId }],
-            },
-          )
-          .exec(), // Don't forget exec() to return a proper promise
-    );
+    // const stockUpdatePromises = createInvoiceDto.items.map(
+    //   (item) =>
+    //     this.stockModel
+    //       .findByIdAndUpdate(
+    //         item.stockId,
+    //         {
+    //           $inc: {
+    //             'quantite.$[elem].quantiteVendue': +item.quantity,
+    //             // 'quantite.$[elem].quantiteInitiale': -item.quantity,
+    //           },
+    //         },
+    //         {
+    //           arrayFilters: [{ 'elem.magasinId': item.magasinId }],
+    //         },
+    //       )
+    //       .exec(), // Don't forget exec() to return a proper promise
+    // );
 
-    // Wait for all stock updates to complete
-    await Promise.all(stockUpdatePromises);
+    // // Wait for all stock updates to complete
+    // await Promise.all(stockUpdatePromises);
 
-    const createdInvoice = new this.invoiceModel(createInvoiceDto);
-    return createdInvoice.save();
+    // const createdInvoice = await new this.invoiceModel(createInvoiceDto);
+    // return createdInvoice.save();
+    try {
+      const newRecompense = await this.invoiceModel.create({
+        ...createInvoiceDto,
+      });
+      return newRecompense.save();
+    } catch (err) {
+      console.error('eeeeeeeeeeeeeee', err);
+    }
   }
 
   async findAll(filter: any): Promise<Invoice[]> {

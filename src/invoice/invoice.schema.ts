@@ -6,34 +6,34 @@ export type InvoiceDocument = Invoice & Document;
 
 @Schema({ timestamps: true })
 export class Invoice {
-  @Prop({ required: true })
+  @Prop({ required: false })
   invoiceNumber: string;
 
-  @Prop({ type: Date, required: true })
+  @Prop({ type: Date, required: false })
   date: string;
 
   @Prop({ type: Types.ObjectId, ref: 'Client' })
   customerId?: Types.ObjectId;
 
-  @Prop({ required: true })
+  @Prop({ required: false })
   customerName: string;
 
-  @Prop({ required: true })
+  @Prop({ required: false })
   customerAddress: string;
 
-  @Prop({ required: true })
+  @Prop({ required: false })
   customerPhone: string;
 
   @Prop([
     {
-      stockId: { type: String, required: true },
-      magasinId: { type: String, required: true },
-      reference: { type: String, required: true },
-      nom: { type: String, required: true },
-      taille: { type: Number, required: true },
-      quantity: { type: Number, required: true, min: 1 },
-      prixAchat: { type: Number, required: true },
-      prixVente: { type: Number, required: true },
+      stockId: { type: Types.ObjectId, ref: 'Stock', required: false },
+      magasinId: { type: Types.ObjectId, ref: 'Magasin', required: false },
+      reference: { type: String, required: false },
+      nom: { type: String, required: false },
+      taille: { type: Number, required: false },
+      quantity: { type: Number, required: false, min: 1 },
+      prixAchat: { type: Number, required: false },
+      prixVente: { type: Number, required: false },
     },
   ])
   items: {
@@ -47,13 +47,13 @@ export class Invoice {
     prixVente: number;
   }[];
 
-  @Prop({ required: true, default: 0 })
+  @Prop({ required: false, default: 0 })
   subtotal: number;
 
-  @Prop({ required: true, default: 0 })
+  @Prop({ required: false, default: 0 })
   tax: number;
 
-  @Prop({ required: true, default: 0 })
+  @Prop({ required: false, default: 0 })
   total: number;
 
   @Prop({ default: 'unpaid' })
