@@ -22,6 +22,7 @@ import { Magasin } from './magasin/magasin.schema';
 import { MagasinModule } from './magasin/magasin.module';
 import { CheckModule } from './check/check.module';
 import { InvoiceModule } from './invoice/invoice.module';
+import { ClientModule } from './client/client.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { InvoiceModule } from './invoice/invoice.module';
     StockModule,
     CheckModule,
     InvoiceModule,
+    ClientModule,
     MagasinModule,
     EtablissementModule,
     IpInfoDataModule,

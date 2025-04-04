@@ -10,9 +10,9 @@ export class Invoice {
   invoiceNumber: string;
 
   @Prop({ type: Date, required: true })
-  date: Date;
+  date: string;
 
-  @Prop({ type: Types.ObjectId, ref: 'Customer' })
+  @Prop({ type: Types.ObjectId, ref: 'Client' })
   customerId?: Types.ObjectId;
 
   @Prop({ required: true })
@@ -26,7 +26,8 @@ export class Invoice {
 
   @Prop([
     {
-      stockId: { type: Types.ObjectId, ref: 'Stock', required: true },
+      stockId: { type: String, required: true },
+      magasinId: { type: String, required: true },
       reference: { type: String, required: true },
       nom: { type: String, required: true },
       taille: { type: Number, required: true },
@@ -37,6 +38,7 @@ export class Invoice {
   ])
   items: {
     stockId: Types.ObjectId;
+    magasinId: Types.ObjectId;
     reference: string;
     nom: string;
     taille: number;

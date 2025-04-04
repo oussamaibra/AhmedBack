@@ -1,4 +1,3 @@
-// src/invoice/invoice.controller.ts
 import {
   Controller,
   Get,
@@ -8,46 +7,80 @@ import {
   Put,
   Delete,
   Query,
+  HttpStatus,
+  UseInterceptors,
+  ClassSerializerInterceptor,
+  Res,
 } from '@nestjs/common';
 import { InvoiceService } from './invoice.service';
 import { CreateInvoiceDto } from './invoiceDTO';
 
-@Controller('invoices')
+@Controller('invoice')
+@UseInterceptors(ClassSerializerInterceptor)
 export class InvoiceController {
   constructor(private readonly invoiceService: InvoiceService) {}
 
-  @Post()
-  create(@Body() createInvoiceDto: CreateInvoiceDto) {
+  @Post('')
+  async create(@Body() createInvoiceDto: CreateInvoiceDto) {
     return this.invoiceService.create(createInvoiceDto);
   }
 
-  @Get()
-  findAll() {
-    return this.invoiceService.findAll();
+  @Get('')
+  async findAll(
+    @Query('magasinId') magasinId?: string,
+    @Query('status') status?: 'paid' | 'unpaid' | 'partially_paid',
+    @Query('startDate') startDate?: string,
+    @Query('endDate') endDate?: string,
+  ) {
+    const filter: any = {};
+    if (magasinId) filter['items.magasinId'] = magasinId;
+    if (status) filter.status = status;
+    if (startDate || endDate) {
+      filter.date = {};
+      if (startDate) filter.date.$gte = new Date(startDate);
+      if (endDate) filter.date.$lte = new Date(endDate);
+    }
+    return this.invoiceService.findAll(filter);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string) {
     return this.invoiceService.findOne(id);
   }
 
   @Get('customer/:customerId')
-  findByCustomer(@Param('customerId') customerId: string) {
+  async findByCustomer(@Param('customerId') customerId: string) {
     return this.invoiceService.findByCustomer(customerId);
   }
 
+  @Get('magasin/:magasinId')
+  async findByMagasin(@Param('magasinId') magasinId: string) {
+    return this.invoiceService.findByMagasin(magasinId);
+  }
+
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateInvoiceDto: CreateInvoiceDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateInvoiceDto: CreateInvoiceDto,
+  ) {
     return this.invoiceService.update(id, updateInvoiceDto);
   }
 
+  @Put(':id/status')
+  async updateStatus(
+    @Param('id') id: string,
+    @Body() statusUpdate: CreateInvoiceDto,
+  ) {
+    return this.invoiceService.updateStatus(id, statusUpdate.status);
+  }
+
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
     return this.invoiceService.remove(id);
   }
 
   @Get('stats/summary')
-  getStats() {
+  async getStats() {
     return this.invoiceService.getInvoiceStats();
   }
 }

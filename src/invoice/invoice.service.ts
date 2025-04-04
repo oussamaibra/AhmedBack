@@ -1,15 +1,15 @@
-// src/invoice/invoice.service.ts
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { CreateInvoiceDto } from './invoiceDTO';
 import { Invoice, InvoiceDocument } from './invoice.schema';
 import { Stock, StockDocument } from 'src/stock/stock.schema';
-import { CreateInvoiceDto } from './invoiceDTO';
 
 @Injectable()
 export class InvoiceService {
   constructor(
-    @InjectModel(Invoice.name) private invoiceModel: Model<InvoiceDocument>,
+    @InjectModel(Invoice.name)
+    private readonly invoiceModel: Model<InvoiceDocument>,
     @InjectModel(Stock.name) private stockModel: Model<StockDocument>,
   ) {}
 
@@ -28,97 +28,114 @@ export class InvoiceService {
         .padStart(5, '0')}`;
     }
 
-    // Update stock quantities
-    for (const item of createInvoiceDto.items) {
-      await this.stockModel.findByIdAndUpdate(
-        item.stockId,
-        {
-          $inc: { 'quantite.$[elem].quantiteDisponible': -item.quantity },
-        },
-        {
-          arrayFilters: [{ 'elem.magasinId': 'default' }], // Adjust based on your magasin structure
-        },
-      );
-    }
+    console.log('ttttttttttttttt', createInvoiceDto);
+
+    const stockUpdatePromises = createInvoiceDto.items.map(
+      (item) =>
+        this.stockModel
+          .findByIdAndUpdate(
+            item.stockId,
+            {
+              $inc: {
+                'quantite.$[elem].quantiteVendue': +item.quantity,
+                // 'quantite.$[elem].quantiteInitiale': -item.quantity,
+              },
+            },
+            {
+              arrayFilters: [{ 'elem.magasinId': item.magasinId }],
+            },
+          )
+          .exec(), // Don't forget exec() to return a proper promise
+    );
+
+    // Wait for all stock updates to complete
+    await Promise.all(stockUpdatePromises);
 
     const createdInvoice = new this.invoiceModel(createInvoiceDto);
     return createdInvoice.save();
   }
 
-  async findAll(): Promise<Invoice[]> {
-    return this.invoiceModel.find().exec();
+  async findAll(filter: any): Promise<Invoice[]> {
+    return this.invoiceModel.find(filter).exec();
   }
 
   async findOne(id: string): Promise<Invoice> {
-    return this.invoiceModel.findById(id).exec();
-  }
-
-  async update(
-    id: string,
-    updateInvoiceDto: CreateInvoiceDto,
-  ): Promise<Invoice> {
-    // For a complete implementation, you would need to handle stock quantity adjustments
-    // when items are changed in the invoice
-    return this.invoiceModel
-      .findByIdAndUpdate(id, updateInvoiceDto, { new: true })
-      .exec();
-  }
-
-  async remove(id: string): Promise<Invoice> {
-    // Before deleting, you might want to restore stock quantities
     const invoice = await this.invoiceModel.findById(id).exec();
-    if (invoice) {
-      for (const item of invoice.items) {
-        await this.stockModel.findByIdAndUpdate(
-          item.stockId,
-          {
-            $inc: { 'quantite.$[elem].quantiteDisponible': item.quantity },
-          },
-          {
-            arrayFilters: [{ 'elem.magasinId': 'default' }], // Adjust based on your magasin structure
-          },
-        );
-      }
+    if (!invoice) {
+      throw new NotFoundException(`Invoice with ID ${id} not found`);
     }
-    return this.invoiceModel.findByIdAndDelete(id).exec();
+    return invoice;
   }
 
   async findByCustomer(customerId: string): Promise<Invoice[]> {
     return this.invoiceModel.find({ customerId }).exec();
   }
 
-  async getInvoiceStats(): Promise<{
-    totalSales: number;
-    paidInvoices: number;
-    outstanding: number;
-  }> {
-    const result = await this.invoiceModel.aggregate([
-      {
-        $group: {
-          _id: null,
-          totalSales: { $sum: '$total' },
-          paidInvoices: {
-            $sum: {
-              $cond: [{ $eq: ['$status', 'paid'] }, 1, 0],
-            },
-          },
-        },
-      },
-    ]);
-
-    const stats = result[0] || { totalSales: 0, paidInvoices: 0 };
-    return {
-      totalSales: stats.totalSales,
-      paidInvoices: stats.paidInvoices,
-      outstanding: stats.totalSales - (await this.getTotalPaidAmount()),
-    };
+  async findByMagasin(magasinId: string): Promise<Invoice[]> {
+    return this.invoiceModel.find({ 'items.magasinId': magasinId }).exec();
   }
 
-  private async getTotalPaidAmount(): Promise<number> {
-    const result = await this.invoiceModel.aggregate([
-      { $match: { status: 'paid' } },
-      { $group: { _id: null, total: { $sum: '$total' } } },
-    ]);
-    return result[0]?.total || 0;
+  async update(
+    id: string,
+    updateInvoiceDto: CreateInvoiceDto,
+  ): Promise<Invoice> {
+    const updatedInvoice = await this.invoiceModel
+      .findByIdAndUpdate(id, updateInvoiceDto, { new: true })
+      .exec();
+    if (!updatedInvoice) {
+      throw new NotFoundException(`Invoice with ID ${id} not found`);
+    }
+    return updatedInvoice;
+  }
+
+  async updateStatus(
+    id: string,
+    status: 'paid' | 'unpaid' | 'partially_paid',
+  ): Promise<Invoice> {
+    const updatedInvoice = await this.invoiceModel
+      .findByIdAndUpdate(id, { status }, { new: true })
+      .exec();
+    if (!updatedInvoice) {
+      throw new NotFoundException(`Invoice with ID ${id} not found`);
+    }
+    return updatedInvoice;
+  }
+
+  async remove(id: string): Promise<Invoice> {
+    const deletedInvoice = await this.invoiceModel.findByIdAndDelete(id).exec();
+    if (!deletedInvoice) {
+      throw new NotFoundException(`Invoice with ID ${id} not found`);
+    }
+    return deletedInvoice;
+  }
+
+  async getInvoiceStats(): Promise<any> {
+    return this.invoiceModel
+      .aggregate([
+        {
+          $group: {
+            _id: '$status',
+            totalAmount: { $sum: '$total' },
+            count: { $sum: 1 },
+          },
+        },
+      ])
+      .exec();
+  }
+
+  async getMagasinStats(magasinId: string): Promise<any> {
+    return this.invoiceModel
+      .aggregate([
+        { $unwind: '$items' },
+        { $match: { 'items.magasinId': magasinId } },
+        {
+          $group: {
+            _id: '$status',
+            totalAmount: { $sum: '$total' },
+            count: { $sum: 1 },
+          },
+        },
+      ])
+      .exec();
   }
 }
