@@ -90,14 +90,4 @@ export class UserController {
     if (!user) throw new NotFoundException('User does not exist!');
     return user;
   }
-
-  @UseGuards(JwtAuthGuard)
-  @Put('/isOnline/:userId/:val')
-  async updateIsOnline(
-    @Param('userId') userId: string,
-    @Param('val') val: boolean,
-  ) {
-    const user = await this.userService.updateIsOnline(userId, val);
-    return user;
-  }
 }

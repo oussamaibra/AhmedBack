@@ -25,22 +25,22 @@ export class UserService {
   ) {}
 
   async startWatching() {
-    this.userModel
-      .watch<UserDocument>([], {
-        fullDocument: 'updateLookup', // get full document after action
-      })
-      .on('change', (e: any) => {
-        if (e.operationType === 'update') {
-          if (Object.keys(e.updateDescription.updatedFields)[0] === 'isOnline')
-            this.SocketGateway.sendFromServerToClient(
-              {
-                userId: e.fullDocument._id,
-                isOnline: e.updateDescription.updatedFields.isOnline,
-              },
-              'isOnline',
-            );
-        }
-      });
+    // this.userModel
+    //   .watch<UserDocument>([], {
+    //     fullDocument: 'updateLookup', // get full document after action
+    //   })
+    //   .on('change', (e: any) => {
+    //     if (e.operationType === 'update') {
+    //       if (Object.keys(e.updateDescription.updatedFields)[0] === 'isOnline')
+    //         this.SocketGateway.sendFromServerToClient(
+    //           {
+    //             userId: e.fullDocument._id,
+    //             isOnline: e.updateDescription.updatedFields.isOnline,
+    //           },
+    //           'isOnline',
+    //         );
+    //     }
+    //   });
   }
 
   async addUser(createUserDTO: CreateUserDTO): Promise<any> {
@@ -108,15 +108,7 @@ export class UserService {
         _id: id,
       },
       {
-        username: createUserDTO.username,
-        avatar: createUserDTO.avatar,
-        usernameInsta: createUserDTO.usernameInsta,
-        gender: createUserDTO.gender,
-        phone: createUserDTO.phone,
-        email: createUserDTO.email,
-        ville: createUserDTO.ville,
-        codePostal: createUserDTO.codePostal,
-        type: createUserDTO.type,
+        createUserDTO,
       },
     );
 
@@ -142,50 +134,6 @@ export class UserService {
       throw new HttpException('Not Data Found ', HttpStatus.NOT_FOUND);
     } else {
       return user;
-    }
-  }
-
-  async updateIsOnline(userId: string, val: boolean): Promise<any | undefined> {
-    const onlineUsers = await this.userModel.find({ isOnline: true });
-    const onlineUsersIds = onlineUsers
-      .filter(
-        (el) =>
-          moment().diff(
-            moment(el.isOnlineTime, 'YYYY-MM-DD HH:mm:ss'),
-            'minute',
-          ) > 5, //if > 5 min from last connection
-      )
-      .map((el) => String(el._id));
-
-    await this.userModel.updateMany(
-      { _id: { $in: onlineUsersIds } },
-      { $set: { isOnline: false } },
-    );
-    let user;
-    if (val) {
-      user = await this.userModel.updateOne(
-        { _id: userId },
-        {
-          $set: {
-            isOnline: val,
-            isOnlineTime: moment().format('YYYY-MM-DD HH:mm:ss'),
-          },
-        },
-      );
-    } else {
-      user = await this.userModel.updateOne(
-        { _id: userId },
-        {
-          $set: {
-            isOnline: val,
-          },
-        },
-      );
-    }
-    if (user) {
-      return user;
-    } else {
-      throw new HttpException('user not found', HttpStatus.NOT_FOUND);
     }
   }
 

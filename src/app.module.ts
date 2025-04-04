@@ -21,6 +21,7 @@ import { ScraperModule } from './scraper/scraper.module';
 import { Magasin } from './magasin/magasin.schema';
 import { MagasinModule } from './magasin/magasin.module';
 import { CheckModule } from './check/check.module';
+import { InvoiceModule } from './invoice/invoice.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { CheckModule } from './check/check.module';
     ScraperModule,
     StockModule,
     CheckModule,
+    InvoiceModule,
     MagasinModule,
     EtablissementModule,
     IpInfoDataModule,
