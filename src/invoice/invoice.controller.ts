@@ -15,7 +15,7 @@ import {
 import { InvoiceService } from './invoice.service';
 import { CreateInvoiceDto } from './invoiceDTO';
 
-@Controller('Invoice')
+@Controller('invoice')
 export class InvoiceController {
   constructor(private readonly invoiceService: InvoiceService) {}
 

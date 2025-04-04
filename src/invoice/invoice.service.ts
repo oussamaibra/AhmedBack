@@ -8,7 +8,9 @@ import { Stock, StockDocument } from 'src/stock/stock.schema';
 @Injectable()
 export class InvoiceService {
   constructor(
-    @InjectModel('Invoice') private invoiceModel: Model<InvoiceDocument>,
+    @InjectModel(Invoice.name)
+    private readonly invoiceModel: Model<InvoiceDocument>,
+    @InjectModel(Stock.name) private stockModel: Model<StockDocument>,
   ) {}
 
   async createInv(createInvoiceDto: CreateInvoiceDto): Promise<any> {
