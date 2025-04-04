@@ -13,7 +13,7 @@ export class InvoiceService {
     @InjectModel(Stock.name) private stockModel: Model<StockDocument>,
   ) {}
 
-  async create(createInvoiceDto: CreateInvoiceDto): Promise<any> {
+  async createInv(createInvoiceDto: CreateInvoiceDto): Promise<any> {
     // Generate invoice number if not provided
     if (!createInvoiceDto.invoiceNumber) {
       const lastInvoice = await this.invoiceModel
