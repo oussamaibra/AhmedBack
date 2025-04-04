@@ -28,28 +28,26 @@ export class InvoiceService {
         .padStart(5, '0')}`;
     }
 
-    console.log('ttttttttttttttt', createInvoiceDto);
+    const stockUpdatePromises = createInvoiceDto.items.map(
+      (item) =>
+        this.stockModel
+          .findByIdAndUpdate(
+            item.stockId,
+            {
+              $inc: {
+                'quantite.$[elem].quantiteVendue': +item.quantity,
+                // 'quantite.$[elem].quantiteInitiale': -item.quantity,
+              },
+            },
+            {
+              arrayFilters: [{ 'elem.magasinId': item.magasinId }],
+            },
+          )
+          .exec(), // Don't forget exec() to return a proper promise
+    );
 
-    // const stockUpdatePromises = createInvoiceDto.items.map(
-    //   (item) =>
-    //     this.stockModel
-    //       .findByIdAndUpdate(
-    //         item.stockId,
-    //         {
-    //           $inc: {
-    //             'quantite.$[elem].quantiteVendue': +item.quantity,
-    //             // 'quantite.$[elem].quantiteInitiale': -item.quantity,
-    //           },
-    //         },
-    //         {
-    //           arrayFilters: [{ 'elem.magasinId': item.magasinId }],
-    //         },
-    //       )
-    //       .exec(), // Don't forget exec() to return a proper promise
-    // );
-
-    // // Wait for all stock updates to complete
-    // await Promise.all(stockUpdatePromises);
+    // Wait for all stock updates to complete
+    await Promise.all(stockUpdatePromises);
 
     // const createdInvoice = await new this.invoiceModel(createInvoiceDto);
     // return createdInvoice.save();
