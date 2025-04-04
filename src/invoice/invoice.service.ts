@@ -8,12 +8,10 @@ import { Stock, StockDocument } from 'src/stock/stock.schema';
 @Injectable()
 export class InvoiceService {
   constructor(
-    @InjectModel(Invoice.name)
-    private readonly invoiceModel: Model<InvoiceDocument>,
-    @InjectModel(Stock.name) private stockModel: Model<StockDocument>,
+    @InjectModel('Invoice') private invoiceModel: Model<InvoiceDocument>,
   ) {}
 
-  async create(createInvoiceDto: CreateInvoiceDto): Promise<any> {
+  async createInv(createInvoiceDto: CreateInvoiceDto): Promise<any> {
     // Generate invoice number if not provided
     if (!createInvoiceDto.invoiceNumber) {
       const lastInvoice = await this.invoiceModel

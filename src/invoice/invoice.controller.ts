@@ -15,14 +15,13 @@ import {
 import { InvoiceService } from './invoice.service';
 import { CreateInvoiceDto } from './invoiceDTO';
 
-@Controller('invoice')
-@UseInterceptors(ClassSerializerInterceptor)
+@Controller('Invoice')
 export class InvoiceController {
   constructor(private readonly invoiceService: InvoiceService) {}
 
   @Post('')
-  async create(@Body() createInvoiceDto: CreateInvoiceDto) {
-    return this.invoiceService.create(createInvoiceDto);
+  async createInvoice(@Body() createInvoiceDto: CreateInvoiceDto) {
+    return this.invoiceService.createInv(createInvoiceDto);
   }
 
   @Get('')
