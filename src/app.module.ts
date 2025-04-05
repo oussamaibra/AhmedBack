@@ -23,6 +23,7 @@ import { MagasinModule } from './magasin/magasin.module';
 import { CheckModule } from './check/check.module';
 import { InvoiceModule } from './invoice/invoice.module';
 import { ClientModule } from './client/client.module';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 @Module({
   imports: [
@@ -34,6 +35,26 @@ import { ClientModule } from './client/client.module';
     ScraperModule,
     StockModule,
     CheckModule,
+    MailerModule.forRoot({
+      transport: {
+        host: 'your-smtp-host', // e.g., 'smtp.gmail.com'
+        secure: false,
+        auth: {
+          user: 'your-email@example.com',
+          pass: 'your-email-password',
+        },
+      },
+      defaults: {
+        from: '"No Reply" <no-reply@example.com>',
+      },
+      template: {
+        dir: join(__dirname, 'templates'), // Create a 'templates' folder in your src directory
+        //adapter: new HandlebarsAdapter(),
+        options: {
+          strict: true,
+        },
+      },
+    }),
     InvoiceModule,
     ClientModule,
     MagasinModule,

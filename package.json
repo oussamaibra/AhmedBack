@@ -21,6 +21,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@nestjs-modules/mailer": "^2.0.2",
     "@nestjs/cache-manager": "^2.1.0",
     "@nestjs/common": "^9.0.0",
     "@nestjs/core": "^9.0.0",
@@ -30,6 +31,7 @@
     "@nestjs/passport": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/platform-socket.io": "^9.2.1",
+    "@nestjs/schedule": "^5.0.1",
     "@nestjs/serve-static": "^3.0.1",
     "@nestjs/websockets": "^9.2.1",
     "@types/lodash": "^4.14.191",
@@ -47,6 +49,7 @@
     "mongoose": "^6.8.1",
     "nest-winston": "^1.9.3",
     "node-poppler": "^6.2.5",
+    "nodemailer": "^6.10.0",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
