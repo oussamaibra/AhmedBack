@@ -12,7 +12,7 @@ export class Invoice {
   @Prop({ type: Date, required: false })
   date: string;
 
-  @Prop({ type: Types.ObjectId, ref: 'Client' })
+  @Prop({ type: Types.ObjectId, ref: 'Client', required: false })
   customerId?: Types.ObjectId;
 
   @Prop({ required: false })
