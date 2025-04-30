@@ -59,7 +59,7 @@ export const multerOptions = {
     // File modification details
     filename: (req: any, file: any, cb: any) => {
       // Calling the callback passing the random name generated with the original extension name
-      cb(null, `${uuid()}${extname(file.originalname)}`);
+      cb(null, file.originalname);
     },
   }),
 };

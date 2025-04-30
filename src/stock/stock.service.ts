@@ -13,12 +13,29 @@ export class StockService {
     return createdStock.save();
   }
 
-  async createMany(data: any): Promise<any> {
-    const dataInc = data.map((el) => ({
-      ...el,
+  async createMany(data: any[]): Promise<any> {
+    if (!Array.isArray(data)) {
+      throw new Error('Invalid data format. Expected an array of stock items.');
+    }
+    const stockEntries = data.map((item) => ({
+      nom: item?.ref,
+      reference: item?.ref,
+      image: item.image || null,
+      prixAchat: Number(item.prixachat) || 0,
+      prixVente: Number(item.prixvante) || 0,
+      taille: 1,
+      quantite: [
+        {
+          quantiteInitiale: Number(item.quantite) || 0,
+          quantiteVendue: 0,
+          quantitePerdue: 0,
+          magasinId: null,
+        },
+      ],
     }));
-    // const createdStock = this.stockModel.insertMany(data);
-    return dataInc;
+
+    console.log('📦 Mapped stock data:', stockEntries.length);
+    return this.stockModel.insertMany(stockEntries);
   }
 
   async findAll(): Promise<Stock[]> {

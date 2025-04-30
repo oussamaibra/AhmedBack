@@ -30,9 +30,8 @@ export class StockController {
   @Post('/extract')
   @UseInterceptors(FileInterceptor('file')) // default is in-memory buffer
   async handleExcelUpload(@UploadedFile() file: Express.Multer.File) {
-    const data = this.excelService.extractAllData(file.buffer);
-    // this.stockService.createMany(data);
-    return data;
+    const data = await this.excelService.extractAllData(file.buffer);
+    return this.stockService.createMany(data);
   }
 
   @Get('/')

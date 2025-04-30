@@ -6,21 +6,21 @@ export type StockDocument = Stock & Document;
 
 @Schema({ timestamps: true })
 export class Stock {
-  @Prop({ required: true, trim: true })
+  @Prop({ required: false, trim: true })
   nom: string;
   @Prop({ required: false })
   image: string;
 
-  @Prop({ required: true, unique: true, trim: true, uppercase: true })
+  @Prop({ required: false, unique: false, trim: true, uppercase: true })
   reference: string;
 
-  @Prop({ required: true, min: 1, max: 6 })
+  @Prop({ required: false, min: 1, max: 6 })
   taille: number;
 
-  @Prop({ required: true, min: 0, default: 0 })
+  @Prop({ required: false, min: 0, default: 0 })
   prixAchat: number;
 
-  @Prop({ required: true, min: 0, default: 0 })
+  @Prop({ required: false, min: 0, default: 0 })
   prixVente: number;
 
   // @Prop({ required: true, default: 0, min: 0 })
@@ -31,7 +31,7 @@ export class Stock {
 
   // @Prop({ required: true, default: 0, min: 0 })
   // quantitePerdue: number;
-  @Prop({ type: Array, required: true })
+  @Prop({ type: Array, required: false })
   quantite: StockByMagasin[];
 
   // // Virtuals

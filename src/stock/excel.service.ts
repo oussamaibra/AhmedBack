@@ -43,7 +43,7 @@ export class ExcelService {
       const imageFile = mediaFiles[i];
       let imageFileName = null;
 
-      const refNameRaw = cleanRow['ref/name']?.toString().trim();
+      const refNameRaw = cleanRow['ref']?.toString().trim();
       const safeRef =
         refNameRaw?.replace(/[^\w\-]/g, '-') || `unnamed-${i + 1}`;
 

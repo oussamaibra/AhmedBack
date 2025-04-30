@@ -5,7 +5,7 @@ import * as compression from 'compression';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
-    allowedHeaders: ['content-type', 'Authorization'],
+    allowedHeaders: ['content-type', 'Authorization', '*'],
     origin: '*',
     credentials: true,
   });
