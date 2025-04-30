@@ -8,6 +8,8 @@ export type StockDocument = Stock & Document;
 export class Stock {
   @Prop({ required: true, trim: true })
   nom: string;
+  @Prop({ required: false })
+  image: string;
 
   @Prop({ required: true, unique: true, trim: true, uppercase: true })
   reference: string;

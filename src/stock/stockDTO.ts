@@ -6,6 +6,7 @@ export class StockByMagasin {
 }
 export class StockDTO {
   nom: string;
+  image: string;
   reference: string;
   taille: number;
   prixAchat: number;

@@ -13,6 +13,14 @@ export class StockService {
     return createdStock.save();
   }
 
+  async createMany(data: any): Promise<any> {
+    const dataInc = data.map((el) => ({
+      ...el,
+    }));
+    // const createdStock = this.stockModel.insertMany(data);
+    return dataInc;
+  }
+
   async findAll(): Promise<Stock[]> {
     return this.stockModel
       .find()

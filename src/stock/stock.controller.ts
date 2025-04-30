@@ -7,17 +7,32 @@ import {
   Put,
   Delete,
   Query,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { StockService } from './stock.service';
 import { StockDTO } from './stockDTO';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ExcelService } from './excel.service';
 
 @Controller('stock')
 export class StockController {
-  constructor(private readonly stockService: StockService) {}
+  constructor(
+    private readonly stockService: StockService,
+    private readonly excelService: ExcelService,
+  ) {}
 
   @Post('/')
   create(@Body() createStockDto: StockDTO) {
     return this.stockService.create(createStockDto);
+  }
+
+  @Post('/extract')
+  @UseInterceptors(FileInterceptor('file')) // default is in-memory buffer
+  async handleExcelUpload(@UploadedFile() file: Express.Multer.File) {
+    const data = this.excelService.extractAllData(file.buffer);
+    // this.stockService.createMany(data);
+    return data;
   }
 
   @Get('/')

@@ -8,6 +8,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { StockSchema } from './stock.schema';
 import { StockService } from './stock.service';
 import { StockController } from './stock.controller';
+import { ExcelService } from './excel.service';
 
 @Module({
   imports: [
@@ -21,12 +22,13 @@ import { StockController } from './stock.controller';
   ],
   providers: [
     StockService,
+    ExcelService,
     {
       provide: APP_INTERCEPTOR,
       useClass: CacheInterceptor,
     },
   ],
   controllers: [StockController],
-  exports: [StockService],
+  exports: [StockService, ExcelService],
 })
 export class StockModule {}

@@ -53,7 +53,34 @@ export class CheckService {
       await this.mailerService.sendMail({
         to: 'finance@yourcompany.com', // Replace with actual recipient
         subject: `[Check Reminder] ${check.numCheck} - ${check.nomPersonne} - ${check.montant_in} DH`,
-        template: './check-reminder',
+        // template: './check-reminder',
+        html: `<div style="font-family: Arial, sans-serif; line-height: 1.6; max-width: 600px; margin: 0 auto;">
+    <h2 style="color: #2c3e50;">Rappel de Dépôt de Chèque</h2>
+
+    <p>Bonjour,</p>
+
+    <p>Vous avez un chèque à déposer demain :</p>
+
+    <div style="background: #f9f9f9; padding: 15px; border-left: 4px solid #3498db; margin: 20px 0;">
+        <p><strong>Numéro de chèque:</strong> {{numCheck}}</p>
+        <p><strong>Nom:</strong> {{nom}}</p>
+        <p><strong>Personne:</strong> {{nomPersonne}}</p>
+        <p><strong>Montant entrant:</strong> {{montant_in}} DH</p>
+        <p><strong>Montant sortant:</strong> {{montant_ou}} DH</p>
+        <p><strong>Date d'émission:</strong> {{dateCheck}}</p>
+        <p><strong>Date de dépôt prévue:</strong> {{dateDepotCheck}}</p>
+        <p><strong>Statut:</strong> {{status}}</p>
+    </div>
+
+    <p>Merci de prendre les dispositions nécessaires pour le dépôt de ce chèque.</p>
+
+    <p>Cordialement,</p>
+    <p>L'équipe de gestion des chèques</p>
+
+    <div style="margin-top: 30px; font-size: 12px; color: #7f8c8d;">
+        <p>Ceci est un message automatique, merci de ne pas y répondre.</p>
+    </div>
+    </div>`,
         context: {
           numCheck: check.numCheck,
           nom: check.nom,
