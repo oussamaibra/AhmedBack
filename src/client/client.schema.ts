@@ -17,6 +17,8 @@ export class Client {
 
   @Prop()
   email?: string;
+  @Prop()
+  magasinId?: string[];
 
   @Prop()
   notes?: string;

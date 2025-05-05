@@ -9,8 +9,8 @@ export class User {
   username: string;
   @Prop({ type: String })
   email: string;
-  @Prop({ type: String })
-  magasinId?: string;
+  @Prop({ type: Array })
+  magasinId?: string[];
   @Prop({ type: String })
   password: string;
   @Prop({ default: 'active' })
