@@ -21,6 +21,9 @@ export class CreateInvoiceDto {
   subtotal: number;
   tax: number;
   total: number;
+  notpayed: number;
+  magasinId?: string;
+  payed: number;
   status?: 'paid' | 'unpaid' | 'partially_paid';
   notes?: string;
 }

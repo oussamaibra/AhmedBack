@@ -10,6 +10,8 @@ export class User {
   @Prop({ type: String })
   email: string;
   @Prop({ type: String })
+  magasinId?: string;
+  @Prop({ type: String })
   password: string;
   @Prop({ default: 'active' })
   status: string;

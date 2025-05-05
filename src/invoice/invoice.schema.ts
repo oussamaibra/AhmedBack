@@ -15,6 +15,9 @@ export class Invoice {
   @Prop({ type: Types.ObjectId, ref: 'Client', required: false })
   customerId?: Types.ObjectId;
 
+  @Prop({ type: String, required: false })
+  magasinId?: string;
+
   @Prop({ required: false })
   customerName: string;
 
@@ -55,6 +58,12 @@ export class Invoice {
 
   @Prop({ required: false, default: 0 })
   total: number;
+
+  @Prop({ required: false, default: 0 })
+  payed: number;
+
+  @Prop({ required: false, default: 0 })
+  notpayed: number;
 
   @Prop({ default: 'unpaid' })
   status: 'paid' | 'unpaid' | 'partially_paid';
