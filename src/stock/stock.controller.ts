@@ -38,6 +38,10 @@ export class StockController {
   findAll() {
     return this.stockService.findAll();
   }
+  @Get('/all')
+  findStock() {
+    return this.stockService.findStock();
+  }
 
   @Get('/:id')
   findOne(@Param('id') id: string) {

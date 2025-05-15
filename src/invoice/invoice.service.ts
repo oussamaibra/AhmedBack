@@ -31,18 +31,12 @@ export class InvoiceService {
     const stockUpdatePromises = createInvoiceDto.items.map(
       (item) =>
         this.stockModel
-          .findByIdAndUpdate(
-            item.stockId,
-            {
-              $inc: {
-                'quantite.$[elem].quantiteVendue': +item.quantity,
-                // 'quantite.$[elem].quantiteInitiale': -item.quantity,
-              },
+          .findByIdAndUpdate(item.stockId, {
+            $inc: {
+              quantiteVendue: +item.quantity,
+              // 'quantite.$[elem].quantiteInitiale': -item.quantity,
             },
-            {
-              arrayFilters: [{ 'elem.magasinId': item.magasinId }],
-            },
-          )
+          })
           .exec(), // Don't forget exec() to return a proper promise
     );
 

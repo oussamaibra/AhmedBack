@@ -11,5 +11,8 @@ export class StockDTO {
   taille: number;
   prixAchat: number;
   prixVente: number;
-  quantite: StockByMagasin[];
+  quantiteInitiale: number;
+  quantiteVendue: number;
+  quantitePerdue: number;
+  magasinId: string;
 }

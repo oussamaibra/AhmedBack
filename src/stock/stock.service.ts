@@ -24,14 +24,10 @@ export class StockService {
       prixAchat: Number(item.prixachat) || 0,
       prixVente: Number(item.prixvante) || 0,
       taille: 1,
-      quantite: [
-        {
-          quantiteInitiale: Number(item.quantite) || 0,
-          quantiteVendue: 0,
-          quantitePerdue: 0,
-          magasinId: null,
-        },
-      ],
+      quantiteInitiale: Number(item.quantite) || 0,
+      quantiteVendue: 0,
+      quantitePerdue: 0,
+      magasinId: null,
     }));
 
     console.log('📦 Mapped stock data:', stockEntries.length);
@@ -39,9 +35,16 @@ export class StockService {
   }
 
   async findAll(): Promise<Stock[]> {
+    return this.stockModel.find().exec();
+  }
+
+  async findStock(): Promise<Stock[]> {
     return this.stockModel
       .find()
-
+      .populate({
+        path: 'magasinId',
+        model: 'Magasin',
+      })
       .exec();
   }
 

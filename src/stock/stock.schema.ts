@@ -23,16 +23,20 @@ export class Stock {
   @Prop({ required: false, min: 0, default: 0 })
   prixVente: number;
 
-  // @Prop({ required: true, default: 0, min: 0 })
-  // quantiteInitiale: number;
+  @Prop({ required: true, default: 0, min: 0 })
+  quantiteInitiale: number;
 
-  // @Prop({ required: true, default: 0, min: 0 })
-  // quantiteVendue: number;
+  @Prop({ required: true, default: 0, min: 0 })
+  quantiteVendue: number;
 
-  // @Prop({ required: true, default: 0, min: 0 })
-  // quantitePerdue: number;
-  @Prop({ type: Array, required: false })
-  quantite: StockByMagasin[];
+  @Prop({ required: true, default: 0, min: 0 })
+  quantitePerdue: number;
+
+  @Prop({ required: false })
+  magasinId: string;
+
+  // @Prop({ type: Array, required: false })
+  // quantite: StockByMagasin[];
 
   // // Virtuals
   // quantiteDisponible?: number;
