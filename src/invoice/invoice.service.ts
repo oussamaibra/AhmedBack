@@ -62,7 +62,13 @@ export class InvoiceService {
   }
 
   async findAll(filter: any): Promise<Invoice[]> {
-    return this.invoiceModel.find(filter).exec();
+    return this.invoiceModel
+      .find(filter)
+      .populate({
+        path: 'magasinId',
+        model: 'Magasin',
+      })
+      .exec();
   }
 
   async findOne(id: string): Promise<Invoice> {
